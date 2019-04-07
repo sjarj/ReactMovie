@@ -13,10 +13,16 @@ export default class searchBar extends Component {
 
   render() {
     return (
-      <input
-        onChange={this.handleChange}
-        placeholder={this.state.placeHolder}
-      />
+      <div className="row">
+        <div className="col-md-8">
+          <input
+            className="form-control input-lg"
+            type="text"
+            onChange={this.handleChange}
+            placeholder={this.state.placeHolder}
+          />
+        </div>
+      </div>
     );
   }
 }

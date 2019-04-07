@@ -63,12 +63,16 @@ export default class app extends Component {
     return (
       <div>
         <SearchBar />
-        <Video videoId={this.state.currentMovie.videoId} />
-        {renderMoviesList()}
-        <VideoDetail
-          title={this.state.currentMovie.title}
-          description={this.state.currentMovie.overview}
-        />
+        <div className="row">
+          <div className="col-sm-8">
+            <Video videoId={this.state.currentMovie.videoId} />
+            <VideoDetail
+              title={this.state.currentMovie.title}
+              description={this.state.currentMovie.overview}
+            />
+          </div>
+          <div className="col-sm-4">{renderMoviesList()}</div>
+        </div>
       </div>
     );
   }
