@@ -1,6 +1,6 @@
-import React from "react";
-const IMAGE_BASEURL = "https://image.tmdb.org/t/p/w500";
-const videoListItem = ({ movie }) => {
+import React from 'react';
+const IMAGE_BASEURL = 'https://image.tmdb.org/t/p/w500';
+const videoListItem = props => {
   return (
     <li className="list-group-item">
       <div className="media">
