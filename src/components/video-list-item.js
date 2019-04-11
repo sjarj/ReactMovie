@@ -1,8 +1,10 @@
 import React from 'react';
 const IMAGE_BASEURL = 'https://image.tmdb.org/t/p/w500';
+
 const videoListItem = props => {
+  const { movie, callback } = props;
   return (
-    <li className="list-group-item">
+    <li className="list-group-item" onClick={handleClick}>
       <div className="media">
         <div className="media-left">
           <image
@@ -18,6 +20,9 @@ const videoListItem = props => {
       </div>
     </li>
   );
+  function handleClick() {
+    callback(movie);
+  }
 };
 
 export default videoListItem;

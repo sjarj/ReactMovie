@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import SearchBar from "../components/search-bar";
-import VideoList from "./video-list";
-import VideoDetail from "../components/video-detail";
-import Video from "../components/video";
-import axios from "axios";
+import React, { Component } from 'react';
+import SearchBar from '../components/search-bar';
+import VideoList from './video-list';
+import VideoDetail from '../components/video-detail';
+import Video from '../components/video';
+import axios from 'axios';
 
-const API_END_POINT = "https://api.themoviedb.org/3/";
+const API_END_POINT = 'https://api.themoviedb.org/3/';
 const POPULAR_MOVIES_URL =
-  "discover/movie?language=fr&sort_by=popularity.desc&include_adult=false&append_to_response=images";
-const API_KEY = "api_key=bcf12afe08295526660784d1136fe0e6";
+  'discover/movie?language=fr&sort_by=popularity.desc&include_adult=false&append_to_response=images';
+const API_KEY = 'api_key=bcf12afe08295526660784d1136fe0e6';
 
 export default class app extends Component {
   constructor(props) {
@@ -27,7 +27,7 @@ export default class app extends Component {
         this.setState(
           {
             moviesList: res.data.results.slice(1, 6),
-            currentMovie: res.data.results[0]
+            currentMovie: res.data.results[0],
           },
           function() {
             this.applyVideoToCurrentMovie();
@@ -54,10 +54,21 @@ export default class app extends Component {
       );
   };
 
+  reciveCallback = movie => {
+    this.setState({ currentMovie: movie }, () => {
+      this.applyVideoToCurrentMovie();
+    });
+  };
+
   render() {
     const renderMoviesList = () => {
       if (this.state.moviesList.length >= 5) {
-        return <VideoList moviesList={this.state.moviesList} />;
+        return (
+          <VideoList
+            callback={this.reciveCallback}
+            moviesList={this.state.moviesList}
+          />
+        );
       }
     };
     return (
