@@ -9,6 +9,7 @@ const API_END_POINT = 'https://api.themoviedb.org/3/';
 const POPULAR_MOVIES_URL =
   'discover/movie?language=fr&sort_by=popularity.desc&include_adult=false&append_to_response=images';
 const API_KEY = 'api_key=bcf12afe08295526660784d1136fe0e6';
+const SEARCH_URL = 'search/movie?language=fr&include_adulte=false';
 
 export default class app extends Component {
   constructor(props) {
@@ -22,19 +23,17 @@ export default class app extends Component {
   };
 
   initMovies = () => {
-    axios.get(`${API_END_POINT}${POPULAR_MOVIES_URL}&${API_KEY}`).then(
-      function(res) {
-        this.setState(
-          {
-            moviesList: res.data.results.slice(1, 6),
-            currentMovie: res.data.results[0],
-          },
-          function() {
-            this.applyVideoToCurrentMovie();
-          }
-        );
-      }.bind(this)
-    );
+    axios.get(`${API_END_POINT}${POPULAR_MOVIES_URL}&${API_KEY}`).then(res => {
+      this.setState(
+        {
+          moviesList: res.data.results.slice(1, 6),
+          currentMovie: res.data.results[0],
+        },
+        () => {
+          this.applyVideoToCurrentMovie();
+        }
+      );
+    });
   };
 
   applyVideoToCurrentMovie = () => {
@@ -44,20 +43,34 @@ export default class app extends Component {
           this.state.currentMovie.id
         }?${API_KEY}&append_to_response=videos&include_adult=false`
       )
-      .then(
-        function(res) {
-          const youtubeKey = res.data.videos.results[0].key;
-          const newCurrentMovieState = this.state.currentMovie;
-          newCurrentMovieState.videoId = youtubeKey;
-          this.setState({ currentMovie: newCurrentMovieState });
-        }.bind(this)
-      );
+      .then(res => {
+        const youtubeKey = res.data.videos.results[0].key;
+        const newCurrentMovieState = this.state.currentMovie;
+        newCurrentMovieState.videoId = youtubeKey;
+        this.setState({ currentMovie: newCurrentMovieState });
+      });
   };
 
-  reciveCallback = movie => {
+  onClickListItem = movie => {
     this.setState({ currentMovie: movie }, () => {
       this.applyVideoToCurrentMovie();
     });
+  };
+
+  onClickSearch = searchText => {
+    if (searchText) {
+      axios
+        .get(`${API_END_POINT}${SEARCH_URL}&${API_KEY}&query=${searchText}`)
+        .then(res => {
+          if (res.data && res.data.results[0]) {
+            if (res.data.results[0] != this.state.currentMovie.id) {
+              this.setState({ currentMovie: res.data.results[0] }, () => {
+                this.applyVideoToCurrentMovie();
+              });
+            }
+          }
+        });
+    }
   };
 
   render() {
@@ -65,7 +78,7 @@ export default class app extends Component {
       if (this.state.moviesList.length >= 5) {
         return (
           <VideoList
-            callback={this.reciveCallback}
+            callback={this.onClickListItem}
             moviesList={this.state.moviesList}
           />
         );
@@ -73,7 +86,7 @@ export default class app extends Component {
     };
     return (
       <div>
-        <SearchBar />
+        <SearchBar callback={this.onClickSearch} />
         <div className="row">
           <div className="col-sm-8">
             <Video videoId={this.state.currentMovie.videoId} />
