@@ -3,6 +3,11 @@ import VideoListItem from '../components/video-list-item';
 
 const videoList = props => {
   const { moviesList, callback } = props;
+
+  const reciveCalback = movie => {
+    callback(movie);
+  };
+
   return (
     <div>
       <ul>
@@ -16,10 +21,5 @@ const videoList = props => {
       </ul>
     </div>
   );
-
-  function reciveCalback(movie) {
-    callback(movie);
-  }
 };
-
 export default videoList;
