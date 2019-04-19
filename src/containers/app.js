@@ -54,6 +54,7 @@ export default class app extends Component {
   onClickListItem = movie => {
     this.setState({ currentMovie: movie }, () => {
       this.applyVideoToCurrentMovie();
+      this.setRecommendation();
     });
   };
 
@@ -66,11 +67,24 @@ export default class app extends Component {
             if (res.data.results[0] != this.state.currentMovie.id) {
               this.setState({ currentMovie: res.data.results[0] }, () => {
                 this.applyVideoToCurrentMovie();
+                this.setRecommendation();
               });
             }
           }
         });
     }
+  };
+
+  setRecommendation = () => {
+    axios
+      .get(
+        `${API_END_POINT}movie/${
+          this.state.currentMovie.id
+        }/recommendations?${API_KEY}&language=fr`
+      )
+      .then(res => {
+        this.setState({ moviesList: res.data.results.slice(0, 5) });
+      });
   };
 
   render() {
